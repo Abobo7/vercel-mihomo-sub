@@ -1,0 +1,13 @@
+﻿{
+  "name": "vercel-mihomo-sub",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Vercel API: fetch encrypted subscription and convert to Mihomo YAML",
+  "type": "commonjs",
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
