@@ -19,15 +19,26 @@ module.exports = async function handler(req, res) {
 
     const config = {
       'mixed-port': Number(process.env.MIHOMO_PORT || 7890),
+      'external-controller': process.env.EXTERNAL_CONTROLLER || '127.0.0.1:9090',
       'allow-lan': false,
       mode: 'rule',
-      'log-level': 'info',
+      'log-level': process.env.LOG_LEVEL || 'debug',
+      ipv6: true,
+      tun: {
+        enable: true,
+      },
+      dns: {
+        enable: true,
+        listen: '0.0.0.0:53',
+        'enhanced-mode': 'fake-ip',
+        nameserver: ['8.8.8.8', '1.1.1.1', '114.114.114.114'],
+      },
       proxies,
       'proxy-groups': [
         {
-          name: 'PROXY',
+          name: 'Proxy',
           type: 'select',
-          proxies: ['AUTO', ...names],
+          proxies: ['AUTO', 'DIRECT', ...names],
         },
         {
           name: 'AUTO',
@@ -38,7 +49,7 @@ module.exports = async function handler(req, res) {
           proxies: names,
         },
       ],
-      rules: ['MATCH,PROXY'],
+      rules: ['GEOIP,CN,DIRECT', 'MATCH,Proxy'],
     };
 
     const doc = yaml.dump(config, {
